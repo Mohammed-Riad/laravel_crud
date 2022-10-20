@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Hash;
+use Session;
 use App\Models\book;
+use App\Policies\policy;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -13,29 +17,23 @@ class BookController extends Controller
     }
     public function index()
     {
-       
+        $books = book::latest()->filter(request(["search"]))->get();
+        // dd(policy::viewAny());
+
+        return view("index", ["books" => $books]);
+      
+
    
-        return view('index',['books'=>book::all()]);
+        return view('index',['books'=> $books]);
 
     }
     
 
     public function store(Request $request)
     {
-        
-    //  $formfields=$request->validate(
-        
-    //     [
-    //         'book_title' => 'required',
-    //         'book_description' => 'required',
-    //         'book_auther' => 'required',
-    //         'book_image' => 'required',
-    //     ]);
-    //     // dd($formfields);
-    //     book::create($formfields);
-    //     return redirect('/');
+  
 
-    $request->validate(
+    $validate=$request->validate(
         [
             'book_title' => 'required',
             'book_description' => 'required',
@@ -54,12 +52,8 @@ class BookController extends Controller
     
     );
    
-    $book = new book;
-    $book->book_title = $request->book_title;
-    $book->book_description = $request->book_description;
-    $book->book_auther =$request->book_auther;
-    $book->book_image = $request->book_image ;
-    $book->save();
+  
+    $newbook = book::create($validate);
     return redirect('/');
 
     }
@@ -70,21 +64,12 @@ class BookController extends Controller
 
 
 
-    // public function id($id)
-    // {
-    //     foreach ($books  as $book) {
-    //         if ($book["id"] == $id) {
-    //             return view("index");
-    //         }
-    //     }
-    // }
-
 
     
      public function destroy($id) {
         $book= Book::find($id)->delete();
-       
         return redirect('/');
+       
      }
 
     //  public function edit($id) 
@@ -104,7 +89,7 @@ class BookController extends Controller
     //     $book->book_description = $request->book_description;
     //     $book->book_auther =$request->book_auther;
     //     $book->book_image = $request->book_image ;
-    //     $book->update();
+    //     $book->save();
     //     return redirect('/');
         
     
@@ -114,9 +99,10 @@ class BookController extends Controller
 
     public function edit($id) {
         $book= Book::find($id);
-        return view('/edit',['books'=>$book]);
+        return view('/edit',['books'=> $book]);
           
      }
+
      public function update(Request $request,$id) {
 
         $request->validate(
@@ -134,6 +120,7 @@ class BookController extends Controller
                 'book_image.required'=>'required book image'
     
             ]
+
             );
 
             $book= Book::find($id);
@@ -146,10 +133,14 @@ class BookController extends Controller
             ]);
 
 
-            
-           
             return redirect('/');
   
      }
+
+
+
+
+
+
 
      }

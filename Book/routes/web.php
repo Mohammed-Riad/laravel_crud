@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\usercontroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,26 +15,32 @@ use App\Http\Controllers\BookController;
 |
 */
 
+
 Route::get('/', [BookController::class , "index"]);
+// Route::get('/', [usercontroller::class , "index"]);
 
 
 Route::get('delete/{id}',[BookController::class , "destroy"]);
-// Route::get('edit/{id}'[BookController::class , ""]);
 
-// Route::resource('/', BookController::class);
-// // Route::get('/', [BookController::class , "id{id}"]);
+
 
 route::get('add',[BookController::class,'create']);
 route::post('addbook',[BookController::class ,'store']);
 
-// Route::get('edit/{id}',[BookController::class , "edit"]);
 
-// Route::resource('addbook', BookController::class);
 Route::get('edit/{id}',[BookController::class , "edit"]);
-Route::post('/update/{id}',[BookController::class , "update"]);
-// Route::get('/view', function () {
-//     return view('view');
-// });
+Route::put('/update/{id}',[BookController::class , "update"]);
 
 
-// route::get('/view', [ books::class ,'index']);
+
+
+route::get('sign',[usercontroller::class,'create']);
+route::post('regstare',[usercontroller::class ,'store']);
+
+
+
+Route::get('login', [usercontroller::class, 'login'])->name('login');
+Route::post('Login', [usercontroller::class, 'authenticate']);
+
+
+Route::get("/logout" , [usercontroller::class, 'logout']);

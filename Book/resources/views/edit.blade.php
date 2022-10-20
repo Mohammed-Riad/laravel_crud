@@ -18,7 +18,7 @@ form
 
 <form method="post" action="/update/<?php echo $books->id;?>">
     @csrf
-{{-- @method('put') --}}
+@method('put')
   
 
     <div class="form-group">
@@ -51,7 +51,7 @@ form
       @enderror
       </div>
    <br>
-    <button type="submit" class="btn btn-dark">Submit</button>
+    <button type="submit" class="btn btn-dark">Update</button>
   </form>
 
   
